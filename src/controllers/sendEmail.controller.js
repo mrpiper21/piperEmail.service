@@ -1,130 +1,111 @@
-import nodemailer, { Transporter } from 'nodemailer';
-
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const nodemailer_1 = __importDefault(require("nodemailer"));
 class SendMailController {
-	private static instance: SendMailController;
-	private transporter: Transporter;
-
-	private constructor() {
-		// You must use a Gmail App Password for recipientPassword
-		// if (!process?.env.RECIPIENT_EMAIL || !process?.env.RECIPIENT_PASSWORD) {
-		//   throw new Error('Gmail credentials not configured in environment variables');
-		// }
-
-		this.transporter = nodemailer.createTransport({
-			service: "gmail",
-			host: "smtp.gmail.com",
-			port: 465,
-			secure: true,
-			auth: {
-				user: process?.env.RECIPIENT_EMAIL,
-				pass: process?.env.RECIPIENT_PASSWORD,
-			},
-			pool: true,
-			maxConnections: 5,
-			maxMessages: 100,
-			logger: process.env.NODE_ENV === "development",
-		});
-	}
-
-	public static getInstance(): SendMailController {
-		if (!SendMailController.instance) {
-			SendMailController.instance = new SendMailController();
-		}
-		return SendMailController.instance;
-	}
-
-	public async verifyConnection(): Promise<void> {
-		try {
-			await this.transporter.verify();
-			console.info("Mail transporter connection verified");
-		} catch (error) {
-			console.error(
-				"Mail transporter verification failed:",
-				error instanceof Error ? error.message : "Unknown error"
-			);
-			throw new Error("Failed to verify mail transporter");
-		}
-	}
-
-	//   public async sendMail(
-	//     email: string,
-	//     otp: string,
-	//     organization: string = 'OTP Service',
-	//     subject: string = 'Your One-Time Password'
-	//   ): Promise<void> {
-	//     try {
-	//       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-	//         throw new Error('Invalid email address');
-	//       }
-
-	//       if (!otp || otp.length < 4 || otp.length > 8) {
-	//         throw new Error('Invalid OTP format');
-	//       }
-
-	//       const mailOptions = {
-	//         from: `"${organization}" <${process.env.GMAIL_USER}>`,
-	//         to: email,
-	//         subject: subject,
-	//         text: `Your verification code is: ${otp}`,
-	//         html: this.generateHtmlTemplate(otp, organization),
-	//       };
-
-	//       const info = await this.transporter.sendMail(mailOptions);
-	//       console.info(`Email sent to ${email}`, { messageId: info.messageId });
-	//     } catch (error: unknown) {
-	//       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-	//       console.error(`Failed to send email to ${email}`, { error: errorMessage });
-	//       throw new Error(`Failed to send email: ${errorMessage}`);
-	//     }
-	//   }
-	public async sendFormData(
-		email: string,
-		name: string,
-		description: string,
-		phoneNumber: string,
-		bussiness: string,
-		projectType: string,
-		others?: string
-	): Promise<void> {
-		try {
-			if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-				throw new Error("Invalid email address");
-			}
-			const mailOptions = {
-				from: `"Form Submission" <${"ornamastudios@gmail.com"}>`, // must match authenticated user
-				to: "ornamastudios@gmail.com",
-				replyTo: email,
-				subject: "New Form Submission",
-				text: `New form submission:\nName: ${name}\nEmail: ${email}\nPhone: ${phoneNumber}\nDescription: ${description}`,
-				html: this.generateFormHtmlTemplate(
-					name,
-					email,
-					phoneNumber,
-					description,
-					bussiness,
-					projectType,
-					others
-				),
-			};
-
-			const info = await this.transporter.sendMail(mailOptions);
-			console.info(
-				`Form data email sent to ${process.env.recipientEmail} (submitted by ${email})`,
-				{ messageId: info.messageId }
-			);
-		} catch (error: unknown) {
-			const errorMessage =
-				error instanceof Error ? error.message : "Unknown error";
-			console.error(
-				`Failed to send form data email to ${process.env.recipientEmail} (submitted by ${email})`,
-				{ error: errorMessage }
-			);
-			throw new Error(`Failed to send form data email: ${errorMessage}`);
-		}
-	}
-
-	private generateHtmlTemplate(otp: string, organization: string): string {
-		return `
+    constructor() {
+        // You must use a Gmail App Password for recipientPassword
+        // if (!process?.env.RECIPIENT_EMAIL || !process?.env.RECIPIENT_PASSWORD) {
+        //   throw new Error('Gmail credentials not configured in environment variables');
+        // }
+        this.transporter = nodemailer_1.default.createTransport({
+            service: "gmail",
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+                user: process === null || process === void 0 ? void 0 : process.env.RECIPIENT_EMAIL,
+                pass: process === null || process === void 0 ? void 0 : process.env.RECIPIENT_PASSWORD,
+            },
+            pool: true,
+            maxConnections: 5,
+            maxMessages: 100,
+            logger: process.env.NODE_ENV === "development",
+        });
+    }
+    static getInstance() {
+        if (!SendMailController.instance) {
+            SendMailController.instance = new SendMailController();
+        }
+        return SendMailController.instance;
+    }
+    verifyConnection() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.transporter.verify();
+                console.info("Mail transporter connection verified");
+            }
+            catch (error) {
+                console.error("Mail transporter verification failed:", error instanceof Error ? error.message : "Unknown error");
+                throw new Error("Failed to verify mail transporter");
+            }
+        });
+    }
+    //   public async sendMail(
+    //     email: string,
+    //     otp: string,
+    //     organization: string = 'OTP Service',
+    //     subject: string = 'Your One-Time Password'
+    //   ): Promise<void> {
+    //     try {
+    //       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    //         throw new Error('Invalid email address');
+    //       }
+    //       if (!otp || otp.length < 4 || otp.length > 8) {
+    //         throw new Error('Invalid OTP format');
+    //       }
+    //       const mailOptions = {
+    //         from: `"${organization}" <${process.env.GMAIL_USER}>`,
+    //         to: email,
+    //         subject: subject,
+    //         text: `Your verification code is: ${otp}`,
+    //         html: this.generateHtmlTemplate(otp, organization),
+    //       };
+    //       const info = await this.transporter.sendMail(mailOptions);
+    //       console.info(`Email sent to ${email}`, { messageId: info.messageId });
+    //     } catch (error: unknown) {
+    //       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    //       console.error(`Failed to send email to ${email}`, { error: errorMessage });
+    //       throw new Error(`Failed to send email: ${errorMessage}`);
+    //     }
+    //   }
+    sendFormData(email, name, description, phoneNumber, bussiness, projectType, others) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    throw new Error("Invalid email address");
+                }
+                const mailOptions = {
+                    from: `"Form Submission" <${"ornamastudios@gmail.com"}>`, // must match authenticated user
+                    to: "ornamastudios@gmail.com",
+                    replyTo: email,
+                    subject: "New Form Submission",
+                    text: `New form submission:\nName: ${name}\nEmail: ${email}\nPhone: ${phoneNumber}\nDescription: ${description}`,
+                    html: this.generateFormHtmlTemplate(name, email, phoneNumber, description, bussiness, projectType, others),
+                };
+                const info = yield this.transporter.sendMail(mailOptions);
+                console.info(`Form data email sent to ${process.env.recipientEmail} (submitted by ${email})`, { messageId: info.messageId });
+            }
+            catch (error) {
+                const errorMessage = error instanceof Error ? error.message : "Unknown error";
+                console.error(`Failed to send form data email to ${process.env.recipientEmail} (submitted by ${email})`, { error: errorMessage });
+                throw new Error(`Failed to send form data email: ${errorMessage}`);
+            }
+        });
+    }
+    generateHtmlTemplate(otp, organization) {
+        return `
       <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -515,18 +496,9 @@ class SendMailController {
 </body>
 </html>
     `;
-	}
-
-	private generateFormHtmlTemplate(
-		name: string,
-		email: string,
-		phoneNumber: string,
-		description: string,
-		bussiness: string,
-		projectType: string,
-		others?: string
-	): string {
-		return `
+    }
+    generateFormHtmlTemplate(name, email, phoneNumber, description, bussiness, projectType, others) {
+        return `
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -562,7 +534,6 @@ class SendMailController {
       </body>
       </html>
     `;
-	}
+    }
 }
-
-export default SendMailController;
+exports.default = SendMailController;
