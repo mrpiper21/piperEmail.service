@@ -1,4 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
+import Guest from "../models/guest.modal";
 
 class SendMailController {
 	private static instance: SendMailController;
@@ -120,6 +121,22 @@ class SendMailController {
 				{ error: errorMessage }
 			);
 			throw new Error(`Failed to send form data email: ${errorMessage}`);
+		}
+	}
+
+	public async saveGuestMail(email: string) {
+		try {
+			if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+				throw new Error("Invalid email address");
+			}
+			const guest = new Guest({ email });
+			await guest.save();
+			return { success: true, message: "Guest email saved successfully" };
+		} catch (error) {
+			return {
+				success: false,
+				message: error instanceof Error ? error.message : "Unknown error",
+			};
 		}
 	}
 

@@ -11,6 +11,19 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/piper-emailService';
 
+// Connect to MongoDB, then start server
+mongoose.connect(MONGO_URI)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); // Exit if DB connection fails
+  });
+
 app.use(morgan('dev'));
 app.use(
 	cors({
@@ -22,15 +35,8 @@ app.use(express.json());
 app.use("/api/mail", mailRouter);
 
 // MongoDB connection
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('MongoDB connection error:', err));
 
 // Basic route
 app.get('/', (req, res) => {
   res.send('Piper Email Service is running!');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
 }); 

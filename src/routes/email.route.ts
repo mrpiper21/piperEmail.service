@@ -1,7 +1,7 @@
 import express from 'express'
-import { emailService, handleSendFormData } from '../services/email.service'
+import { emailService, handleSendFormData } from "../services/email.service";
 
-const router = express.Router()
+const router = express.Router();
 
 // const handleSendMail = async (req: express.Request, res: express.Response) => {
 //   const { to, otp } = req.body;
@@ -14,6 +14,10 @@ const router = express.Router()
 // };
 
 // router.post('/send-mail', handleSendMail);
-router.post('/send-form', handleSendFormData)
+router.post("/send-form", handleSendFormData);
+router.post(
+	"/guest-email",
+	emailService.handleSaveGuestMail.bind(emailService)
+);
 
 export default router

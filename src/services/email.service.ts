@@ -111,6 +111,29 @@ class EmailService {
 			});
 		}
 	}
+
+	public async saveGuestMail(
+		email: string
+	): Promise<{ success: boolean; message: string }> {
+		return await this.sendMailController.saveGuestMail(email);
+	}
+
+	public async handleSaveGuestMail(
+		req: import("express").Request,
+		res: import("express").Response
+	): Promise<void> {
+		const { email } = req.body;
+		if (!email) {
+			res.status(400).json({ success: false, message: "Email is required" });
+			return;
+		}
+		const result = await this.saveGuestMail(email);
+		if (result.success) {
+			res.status(200).json(result);
+		} else {
+			res.status(500).json(result);
+		}
+	}
 }
 
 export const emailService = EmailService.getInstance();
