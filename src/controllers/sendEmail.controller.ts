@@ -5,26 +5,26 @@ class SendMailController {
   private transporter: Transporter;
 
   private constructor() {
-    // You must use a Gmail App Password for recipientPassword
-    // if (!process?.env.recipientEmail || !process?.env.recipientPassword) {
-    //   throw new Error('Gmail credentials not configured in environment variables');
-    // }
+		// You must use a Gmail App Password for recipientPassword
+		// if (!process?.env.RECIPIENT_EMAIL || !process?.env.RECIPIENT_PASSWORD) {
+		//   throw new Error('Gmail credentials not configured in environment variables');
+		// }
 
-    this.transporter = nodemailer.createTransport({
-      service: 'gmail',
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: "ornamastudios@gmail.com",
-        pass:"saws wrne tnkx pqhj"
-      },
-      pool: true,
-      maxConnections: 5,
-      maxMessages: 100,
-      logger: process.env.NODE_ENV === 'development'
-    });
-  }
+		this.transporter = nodemailer.createTransport({
+			service: "gmail",
+			host: "smtp.gmail.com",
+			port: 465,
+			secure: true,
+			auth: {
+				user: process?.env.RECIPIENT_EMAIL,
+				pass: process?.env.RECIPIENT_PASSWORD,
+			},
+			pool: true,
+			maxConnections: 5,
+			maxMessages: 100,
+			logger: process.env.NODE_ENV === "development",
+		});
+	}
 
   public static getInstance(): SendMailController {
     if (!SendMailController.instance) {
